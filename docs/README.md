@@ -1,1 +1,1 @@
-Markdown files for **Armbian-NG** documentation go here. Images go in the images/ subfolder. Other files part of the documentation go in the extra_files/subfolder
+Markdown files for **Armbian-NG** documentation go here. Images go in the images/ subfolder. Other files part of the documentation go in the extra_files/ subfolder.
