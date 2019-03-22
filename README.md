@@ -1,4 +1,5 @@
-# Armbian-NG
+![Armbian-NG logo](docs/images/armbian-ng_logo1.png) 
+
 **Armbian-NG** is a project with a similar purpose to [Armbian](https://www.armbian.com/)'s: generating Debian or Ubuntu images that can be directly booted on ARM hardware.
 
 **The key differences** between [Armbian](https://www.armbian.com/) and **Armbian-NG** are:
@@ -10,4 +11,4 @@
 
 ### Documentation
 
-Again similar to [Armbian](https://www.armbian.com/) , **Armbian-NG** documentation is written in markdown and stored in the docs/ subfolder, with images in docs/images. It is recommended to use the [Remarkable](https://remarkableapp.github.io/linux/download.html) markdown editor to generate **Armbian-NG** documentation.
+Again similar to [Armbian](https://www.armbian.com/), **Armbian-NG** documentation is written in markdown and stored in the docs/ subfolder, with images in docs/images. It is recommended to use the [Remarkable](https://remarkableapp.github.io/linux/download.html) markdown editor to generate **Armbian-NG** documentation.
