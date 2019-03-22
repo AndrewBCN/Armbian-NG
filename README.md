@@ -7,6 +7,6 @@ Armbian-NG is a project with a similar purpose to [Armbian](https://www.armbian.
 - [Armbian](https://www.armbian.com/) can generate images for both 32-bit and 64-bit ARM hardware. Armbian-NG only supports the generation of images for 64-bit ARM hardware (Aarch64).
 - Armbian-NG can optionally use distcc to accelerate kernel compilation.
 
-###Documentation
+### Documentation
 
 Again similar to [Armbian](https://www.armbian.com/) , Armbian-NG documentation is written in markdown and stored in the docs/ subfolder, with images in docs/images. It is recommended to use the [Remarkable](https://remarkableapp.github.io/linux/download.html) markdown editor to generate Armbian-NG documentation.
