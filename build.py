@@ -26,7 +26,8 @@ def installmodules():
         "wheel",        # needed by other things
         "setuptools",   # ditto
         "args",         # ditto
-        "pyfiglet",     # print nice banners
+        "distro",       # reports detailed host Linux distribution information
+        "pyfiglet",     # prints nice banners
         "clint"         # command line interface tools
         ]
     for package in packages_to_install:
