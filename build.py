@@ -15,6 +15,30 @@
 
 import os
 import sys
+import subprocess
+
+def installmodules():
+
+    print("Downloading and installing various Python packages, please wait...")
+    
+    # packages to install
+    packages_to_install = [
+        "wheel",        # needed by other things
+        "setuptools",   # ditto
+        "args",         # ditto
+        "pyfiglet",     # print nice banners
+        "clint"         # command line interface tools
+        ]
+    for package in packages_to_install:
+        subprocess.run(['pip3', 'install', package])
+    
+    print("Done installing Python packages!")
+
+def printbanner():
+    
+    from pyfiglet import Figlet
+    f = Figlet(font='slant')
+    print(f.renderText('Armbian-NG'))
 
 def main():
 
@@ -26,17 +50,23 @@ def main():
     if not arch.machine == "aarch64":
         print('Armbian-NG must be built on an ARM 64-bit machine (Aarch64)')
         sys.exit(1)
+        
+    # Install needed Python 3 packages
+    installmodules()
+    
+    # Display Armbian-NG banner
+    printbanner()
 
     # Make modules in lib visible
     sys.path.append('./lib/')
     
-    import armbian-ng-functions
-    check-requirements()
-    build-kernel()
-    build-u-boot()
-    build-rootfs()
-    build-boot()
-    build-image()
+#    import armbian-ng-functions
+#    check-requirements()
+#    build-kernel()
+#    build-u-boot()
+#    build-rootfs()
+#    build-boot()
+#    build-image()
     print("Armbian-NG done!")
 
 if __name__ == '__main__':
