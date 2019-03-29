@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 #
 # Copyright (c) 2019 AndrewBCN Andre Derrick Balsa (andrebalsa@gmail.com)
 #
@@ -16,6 +17,7 @@
 import os
 import sys
 import subprocess
+import time
 
 def checkarch():
     
@@ -42,12 +44,12 @@ def installmodules():
     
     for package in packages_to_install:
         try:
-            __import__(package)  
+            globals()[package] = __import__(package)  
             print(package,'was already installed')
         except ModuleNotFoundError:
             print('Installing', package)
             subprocess.run(['pip3', 'install', package])
-            __import__(package)
+            globals()[package] = __import__(package)
         
     print("Done installing Python packages!")
 
@@ -65,7 +67,7 @@ def checklinuxdistro():
         hostdist=distro.id()
         hostdistversion=distro.version()
         if hostdistversion in validbuildhostdists[hostdist]:
-            print('Your host distribution is',hostdist.capitalize(),hostdistversion,'. Good!')
+            print('Your host distribution is',hostdist.capitalize(),hostdistversion,'running on Aarch64 hardware. Good!')
         else:
             print('Your host distribution release',hostdist.capitalize(),hostdistversion,'is not supported for building Armbian-NG.')
             sys.exit(1)
@@ -83,10 +85,13 @@ def main():
 
     print("Welcome to Armbian-NG!")
     
+    # Start stopwatch
+    start = time.time()
+    
     # Check the underlying architecture, must be Aarch64, if not, print message and exit
     checkarch()
     
-    # Install needed Python 3 packages
+    # Install needed Python 3 packages and make them global
     installmodules()
     
     # Check build host Linux distribution
@@ -94,6 +99,12 @@ def main():
 
     # Display Armbian-NG banner
     printbanner()
+    
+    # Tell user we are getting started
+    from clint.textui import puts, colored, indent
+    
+    with indent(4, quote='>>>'):
+        puts(colored.red('Armbian-NG started!'))
     
     # Make modules in lib visible
     sys.path.append('./lib/')
@@ -105,7 +116,24 @@ def main():
 #    build-rootfs()
 #    build-boot()
 #    build-image()
-    print("Armbian-NG done!")
-
+    
+    # Tell user we are done and stop stopwatch
+    with indent(4, quote='>>>'):
+        puts(colored.red('Armbian-NG done!'))
+    end = time.time()
+    
+    # Report build time in minutes
+    buildtime = round((end-start)/60)
+    if buildtime == 0:
+        with indent(4, quote='>>>'):
+            puts(colored.cyan('Build time: less than a minute'))
+    else:
+        if buildtime < 2:
+            with indent(4, quote='>>>'):
+                puts(colored.green('Build time: less than a couple of minutes'))                     
+        else:
+            with indent(4, quote='>>>'):
+                puts(colored.purple('Build time: approximately ' + buildtime + ' minutes'))
+                     
 if __name__ == '__main__':
     main()
