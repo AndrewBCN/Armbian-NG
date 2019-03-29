@@ -27,10 +27,10 @@ def checkarch():
         sys.exit(1)
 
 def installmodules():
-
+    
     print("Downloading and installing various Python packages, please wait...")
     
-    # packages to install
+    # ordered list of packages to install
     packages_to_install = [
         "wheel",        # needed by other things
         "setuptools",   # ditto
@@ -39,9 +39,16 @@ def installmodules():
         "pyfiglet",     # prints nice banners
         "clint"         # command line interface tools
         ]
-    for package in packages_to_install:
-        subprocess.run(['pip3', 'install', package])
     
+    for package in packages_to_install:
+        try:
+            __import__(package)  
+            print(package,'was already installed')
+        except ModuleNotFoundError:
+            print('Installing', package)
+            subprocess.run(['pip3', 'install', package])
+            __import__(package)
+        
     print("Done installing Python packages!")
 
 def checklinuxdistro():
@@ -60,10 +67,10 @@ def checklinuxdistro():
         if hostdistversion in validbuildhostdists[hostdist]:
             print('Your host distribution is',hostdist.capitalize(),hostdistversion,'. Good!')
         else:
-            print('Your host distribution release is not supported for building Armbian-NG.')
+            print('Your host distribution release',hostdist.capitalize(),hostdistversion,'is not supported for building Armbian-NG.')
             sys.exit(1)
     else:
-        print('Your host distribution is not supported for building Armbian-NG.')
+        print('Your host distribution',hostdist.capitalize(),hostdistversion,'is not supported for building Armbian-NG.')
         sys.exit(1)
 
 def printbanner():
