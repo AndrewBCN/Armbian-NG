@@ -17,6 +17,15 @@ import os
 import sys
 import subprocess
 
+def checkarch():
+    
+    arch = os.uname()
+    
+    if not arch.machine == "aarch64":
+        print('Build host architecture is ', arch.machine) 
+        print('Armbian-NG must be built on an ARM 64-bit host (Aarch64)')
+        sys.exit(1)
+
 def installmodules():
 
     print("Downloading and installing various Python packages, please wait...")
@@ -35,6 +44,28 @@ def installmodules():
     
     print("Done installing Python packages!")
 
+def checklinuxdistro():
+    
+    import distro
+    
+    validbuildhostdists = {
+        'ubuntu': '18.04 18.10 19.04',
+        'debian': '9.6 9.7 9.8',
+        'neon': '18.04 18.10 19.04'
+        }
+    
+    if distro.id() in validbuildhostdists:
+        hostdist=distro.id()
+        hostdistversion=distro.version()
+        if hostdistversion in validbuildhostdists[hostdist]:
+            print('Your host distribution is',hostdist.capitalize(),hostdistversion,'. Good!')
+        else:
+            print('Your host distribution release is not supported for building Armbian-NG.')
+            sys.exit(1)
+    else:
+        print('Your host distribution is not supported for building Armbian-NG.')
+        sys.exit(1)
+
 def printbanner():
     
     from pyfiglet import Figlet
@@ -46,18 +77,17 @@ def main():
     print("Welcome to Armbian-NG!")
     
     # Check the underlying architecture, must be Aarch64, if not, print message and exit
-    arch = os.uname()
+    checkarch()
     
-    if not arch.machine == "aarch64":
-        print('Armbian-NG must be built on an ARM 64-bit machine (Aarch64)')
-        sys.exit(1)
-        
     # Install needed Python 3 packages
     installmodules()
     
+    # Check build host Linux distribution
+    checklinuxdistro()
+
     # Display Armbian-NG banner
     printbanner()
-
+    
     # Make modules in lib visible
     sys.path.append('./lib/')
     
