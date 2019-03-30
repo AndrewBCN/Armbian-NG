@@ -18,6 +18,9 @@ import os
 import sys
 import subprocess
 import time
+import argparse
+
+ngversion = "0.01"
 
 def checkarch():
     
@@ -36,7 +39,6 @@ def installmodules():
     packages_to_install = [
         "wheel",        # needed by other things
         "setuptools",   # ditto
-        "args",         # ditto
         "distro",       # reports detailed host Linux distribution information
         "pyfiglet",     # prints nice banners
         "clint"         # command line interface tools
@@ -44,12 +46,13 @@ def installmodules():
     
     for package in packages_to_install:
         try:
-            globals()[package] = __import__(package)  
+            #globals()[package] = __import__(package)
+            __import__(package)
             print(package,'was already installed')
         except ModuleNotFoundError:
             print('Installing', package)
             subprocess.run(['pip3', 'install', package])
-            globals()[package] = __import__(package)
+            #globals()[package] = __import__(package)
         
     print("Done installing Python packages!")
 
@@ -76,11 +79,40 @@ def checklinuxdistro():
         sys.exit(1)
 
 def printbanner():
-    
+    # Prints Armbian-NG banner using pyfiglet
     from pyfiglet import Figlet
     f = Figlet(font='slant')
     print(f.renderText('Armbian-NG'))
+    
+def armbianngmsg(s):
+    # Prints special Armbian-NG message in red
+    from clint.textui import puts, colored, indent
+    with indent(4, quote='>>>'):
+        puts(colored.red(s))
+        
+def parsecommandline():
+    # Parses arguments on build.py command line, if any
+    # Takes appropriate action in some cases
+    parser = argparse.ArgumentParser(prog='build.py',description='A Python version of the Armbian build script',epilog="More information can be found in the Armbian-NG documentation, available in the /docs directory.")
+    #parser.add_argument('--armbianbranch','-a',action='store',dest="armbianbranch",choices=['master','next','tvboxes'],help="Specify the Armbian branch to clone")
+    #parser.add_argument('--configfile','-c',action='store',dest="configfile",help="Specify the build configuration file")
+    #parser.add_argument('--version','-v',action='store',dest="armbianbranch",help="Specify the Armbian branch to clone")
+    args = parser.parse_args()
 
+def reportbuildtime(b):
+    # Calculates and prints the total build.py execution time
+    from clint.textui import puts, colored, indent
+    if b == 0:
+        with indent(4, quote='>>>'):
+            puts(colored.cyan('Build time: less than a minute'))
+    else:
+        if b < 2:
+            with indent(4, quote='>>>'):
+                puts(colored.green('Build time: less than a couple of minutes'))                     
+        else:
+            with indent(4, quote='>>>'):
+                puts(colored.purple('Build time: approximately ' + b + ' minutes'))
+                
 def main():
 
     print("Welcome to Armbian-NG!")
@@ -88,10 +120,13 @@ def main():
     # Start stopwatch
     start = time.time()
     
+    # Parse command line
+    parsecommandline()
+    
     # Check the underlying architecture, must be Aarch64, if not, print message and exit
     checkarch()
     
-    # Install needed Python 3 packages and make them global
+    # Install needed Python 3 packages
     installmodules()
     
     # Check build host Linux distribution
@@ -101,10 +136,7 @@ def main():
     printbanner()
     
     # Tell user we are getting started
-    from clint.textui import puts, colored, indent
-    
-    with indent(4, quote='>>>'):
-        puts(colored.red('Armbian-NG started!'))
+    armbianngmsg('Armbian-NG started!')
     
     # Make modules in lib visible
     sys.path.append('./lib/')
@@ -116,24 +148,16 @@ def main():
 #    build-rootfs()
 #    build-boot()
 #    build-image()
+#    cleanup()
     
     # Tell user we are done and stop stopwatch
-    with indent(4, quote='>>>'):
-        puts(colored.red('Armbian-NG done!'))
+    armbianngmsg('Armbian-NG done!')
     end = time.time()
     
     # Report build time in minutes
-    buildtime = round((end-start)/60)
-    if buildtime == 0:
-        with indent(4, quote='>>>'):
-            puts(colored.cyan('Build time: less than a minute'))
-    else:
-        if buildtime < 2:
-            with indent(4, quote='>>>'):
-                puts(colored.green('Build time: less than a couple of minutes'))                     
-        else:
-            with indent(4, quote='>>>'):
-                puts(colored.purple('Build time: approximately ' + buildtime + ' minutes'))
+    btime = round((end-start)/60)
+    reportbuildtime(btime)
+    
                      
 if __name__ == '__main__':
     main()
