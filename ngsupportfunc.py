@@ -88,11 +88,12 @@ def armbianngmsg(s):
     with indent(4, quote='>>>'):
         puts(colored.red(s))
         
-def parsecommandline():
+def parsecommandline(currentngversion):
     # Parses arguments on build.py command line, if any
     # Takes appropriate action in some cases
+    # Armbian-NG version is passed as parameter from build.py
     parser = argparse.ArgumentParser(prog='build.py',description='A Python version of the Armbian build scripts',epilog="More information can be found in the Armbian-NG documentation, available in the /docs directory.")
-    parser.add_argument('--version','-v',action='version',version=ngversion)
+    parser.add_argument('--version','-v',action='version',version=currentngversion)
     parser.add_argument('--armbianbranch','-a',action='store',dest="armbianbranch",default='master',choices=['master','next','tvboxes'],help="Specify the Armbian branch to clone")
     #parser.add_argument('--configfile','-c',action='store',dest="configfile",help="Specify the build configuration file")
     args = parser.parse_args()
