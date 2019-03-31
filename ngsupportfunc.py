@@ -7,7 +7,7 @@
 # License version 3. This program is licensed "as is" without any
 # warranty of any kind, whether express or implied.
 #
-# build.py - Build an Armbian image bootable on Aarch64 hardware
+# ngsupportfunc.py - support functions for build.py
 #
 # This file is a part of the Armbian-NG project
 # https://github.com/AndrewBCN/Armbian-NG
@@ -19,8 +19,6 @@ import sys
 import subprocess
 import time
 import argparse
-
-ngversion = "0.01"
 
 def checkarch():
     
@@ -98,7 +96,7 @@ def parsecommandline():
     parser.add_argument('--armbianbranch','-a',action='store',dest="armbianbranch",default='master',choices=['master','next','tvboxes'],help="Specify the Armbian branch to clone")
     #parser.add_argument('--configfile','-c',action='store',dest="configfile",help="Specify the build configuration file")
     args = parser.parse_args()
-    print(armbianbranch)
+    print(args.armbianbranch)
 
 def reportbuildtime(b):
     # Calculates and prints the total build.py execution time
@@ -114,51 +112,3 @@ def reportbuildtime(b):
             with indent(4, quote='>>>'):
                 puts(colored.purple('Build time: approximately ' + b + ' minutes'))
                 
-def main():
-
-    print("Welcome to Armbian-NG!")
-    
-    # Start stopwatch
-    start = time.time()
-    
-    # Parse command line
-    parsecommandline()
-    
-    # Check the underlying architecture, must be Aarch64, if not, print message and exit
-    checkarch()
-    
-    # Install needed Python 3 packages
-    installmodules()
-    
-    # Check build host Linux distribution
-    checklinuxdistro()
-
-    # Display Armbian-NG banner
-    printbanner()
-    
-    # Tell user we are getting started
-    armbianngmsg('Armbian-NG started!')
-    
-    # Make modules in lib visible
-    sys.path.append('./lib/')
-    
-#    import armbian-ng-functions
-#    check-requirements()
-#    build-kernel()
-#    build-u-boot()
-#    build-rootfs()
-#    build-boot()
-#    build-image()
-#    cleanup()
-    
-    # Tell user we are done and stop stopwatch
-    armbianngmsg('Armbian-NG done!')
-    end = time.time()
-    
-    # Report build time in minutes
-    btime = round((end-start)/60)
-    reportbuildtime(btime)
-    
-                     
-if __name__ == '__main__':
-    main()
