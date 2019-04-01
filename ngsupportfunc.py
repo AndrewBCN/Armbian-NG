@@ -95,9 +95,10 @@ def parsecommandline(currentngversion):
     parser = argparse.ArgumentParser(prog='build.py',description='A Python version of the Armbian build scripts',epilog="More information can be found in the Armbian-NG documentation, available in the /docs directory.")
     parser.add_argument('--version','-v',action='version',version=currentngversion)
     parser.add_argument('--armbianbranch','-a',action='store',dest="armbianbranch",default='master',choices=['master','next','tvboxes'],help="Specify the Armbian branch to clone")
-    #parser.add_argument('--configfile','-c',action='store',dest="configfile",help="Specify the build configuration file")
+    parser.add_argument('--configfile','-c',default="./config-default.conf",help="Specify the Armbian-style build configuration file")
+    parser.add_argument('--distcc','-d',action="store_true",default=False,help="Use distcc to compile the Linux kernel on multiple machines")
     args = parser.parse_args()
-    print(args.armbianbranch)
+    print(args.armbianbranch, args.distcc, args.configfile)
 
 def reportbuildtime(b):
     # Calculates and prints the total build.py execution time

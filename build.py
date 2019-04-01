@@ -22,7 +22,7 @@ import argparse
 
 import ngsupportfunc    # various functions used by main() below
 
-ngversion = "0.02"
+ngversion = "0.03"
 
 def main():
 
