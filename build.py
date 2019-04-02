@@ -22,7 +22,7 @@ import argparse
 
 import ngsupportfunc    # various functions used by main() below
 
-ngversion = "0.03"
+ngversion = "0.04"
 
 def main():
 
@@ -32,7 +32,8 @@ def main():
     start = time.time()
     
     # Parse command line
-    ngsupportfunc.parsecommandline(ngversion)
+    args = ngsupportfunc.parsecommandline(ngversion)
+    print(args.armbianbranch,args.configfile,args.distcc) # temporarily print command line arguments, for debugging
     
     # Check the underlying architecture, must be Aarch64, if not, print message and exit
     ngsupportfunc.checkarch()
@@ -48,6 +49,10 @@ def main():
     
     # Tell user we are getting started
     ngsupportfunc.armbianngmsg('Armbian-NG started!')
+    
+    # Git clone the selected armbian-build branch in /armbian-<branchname>
+    ngsupportfunc.armbianngmsg('Cloning armbian-build, '+ args.armbianbranch + ' branch, please wait...')
+    ngsupportfunc.clonearmbianbranch(args.armbianbranch)
     
     # Make modules in lib visible
     sys.path.append('./lib/')

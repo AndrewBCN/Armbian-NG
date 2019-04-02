@@ -44,18 +44,16 @@ def installmodules():
     
     for package in packages_to_install:
         try:
-            #globals()[package] = __import__(package)
             __import__(package)
             print(package,'was already installed')
         except ModuleNotFoundError:
             print('Installing', package)
             subprocess.run(['pip3', 'install', package])
-            #globals()[package] = __import__(package)
         
     print("Done installing Python packages!")
 
 def checklinuxdistro():
-    
+    # Checks that the build host Linux distribution/release is in the list below
     import distro
     
     validbuildhostdists = {
@@ -97,8 +95,7 @@ def parsecommandline(currentngversion):
     parser.add_argument('--armbianbranch','-a',action='store',dest="armbianbranch",default='master',choices=['master','next','tvboxes'],help="Specify the Armbian branch to clone")
     parser.add_argument('--configfile','-c',default="./config-default.conf",help="Specify the Armbian-style build configuration file")
     parser.add_argument('--distcc','-d',action="store_true",default=False,help="Use distcc to compile the Linux kernel on multiple machines")
-    args = parser.parse_args()
-    print(args.armbianbranch, args.distcc, args.configfile)
+    return parser.parse_args()
 
 def reportbuildtime(b):
     # Calculates and prints the total build.py execution time
@@ -113,4 +110,42 @@ def reportbuildtime(b):
         else:
             with indent(4, quote='>>>'):
                 puts(colored.purple('Build time: approximately ' + b + ' minutes'))
-                
+
+# More complex build-related functions from this point on
+ 
+def clonearmbianbranch(branchtoclone):
+    # Create directory if not exists, change into it and git clone selected armbian-build branch
+    # if directory exists assume it contains up-to-date armbian build clone
+    dirName="armbian-" + branchtoclone
+    
+    if not os.path.exists(dirName):
+        os.mkdir(dirName)
+        print("Directory",dirName,"created ")
+    else:    
+        print("Directory",dirName,"already exists")
+        return
+    
+    cwdName = os.getcwd()
+    newtempName = cwdName + "/" + dirName
+    
+    print("Current Working Directory " , cwdName)
+    
+    try:
+        # Change the current working Directory    
+        os.chdir(newtempName)
+        print("Directory changed")
+    except OSError:
+        print("Can't change the Current Working Directory")        
+ 
+    print("Current Working Directory " , os.getcwd())
+    
+    # Git clone
+    clonecommand = "git clone --depth 1 --branch " + branchtoclone + " https://github.com/armbian/build.git"
+    print(clonecommand)
+    # subprocess.run(clonecommand)
+    subprocess.run(['git', 'clone', '--depth', '1', '--branch', branchtoclone, 'https://github.com/armbian/build.git'])
+    
+    # Go back
+    os.chdir(cwdName)
+    print("Back to Current Working Directory " , os.getcwd())
+
