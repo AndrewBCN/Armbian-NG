@@ -39,7 +39,7 @@ def installmodules():
         "setuptools",   # ditto
         "distro",       # reports detailed host Linux distribution information
         "pyfiglet",     # prints nice banners
-        "clint"         # command line interface tools
+        "clint",         # command line interface tools
         "npyscreen"     # console user interface library
         ]
     
