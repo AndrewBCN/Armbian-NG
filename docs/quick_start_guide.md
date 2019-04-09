@@ -41,7 +41,7 @@ To build a bootable Armbian image using Armbian-NG, you'll need:
 
 * Note that you can specify some parameters and pass some flags to build.py. For example, to clone the Armbian ***tvboxes*** branch, use ***distcc*** to compile to Linux kernel, and use file ***myconf.conf*** as the Armbian-style configuration file, you  can use the following command:
 
->	python3 ./build.py -d -c myconfig.conf \-\-branch tvboxes
+>	python3 ./build.py -d -c myconfig.conf \-\-armbianbranch tvboxes
 
 * The command
 
