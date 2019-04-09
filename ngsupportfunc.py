@@ -110,7 +110,7 @@ def reportbuildtime(b):
                 puts(colored.green('Build time: less than a couple of minutes'))                     
         else:
             with indent(4, quote='>>>'):
-                puts(colored.yellow('Build time: approximately ' + b + ' minutes'))
+                puts(colored.yellow('Build time: approximately ' + str(b) + ' minutes'))
 
 #########################################################
 # More complex build-related functions from this point on
