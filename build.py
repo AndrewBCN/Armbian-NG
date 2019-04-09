@@ -22,7 +22,7 @@ import argparse
 
 import ngsupportfunc    # various functions used by main() below
 
-ngversion = "0.04"
+ngversion = "0.05"
 
 def main():
 
@@ -56,6 +56,9 @@ def main():
     
     # Make modules in lib visible
     sys.path.append('./lib/')
+    
+    # Get build options from user
+    options = ngsupportfunc.dialog(ngversion)
     
 #    import armbian-ng-functions
 #    check-requirements()
