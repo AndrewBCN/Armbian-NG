@@ -151,7 +151,7 @@ def clonearmbianbranch(branchtoclone):
     os.chdir(cwdName)
     print("Back to Current Working Directory " , os.getcwd())
     
-def gettargets(armbianbranch)
+def gettargets(armbianbranch):
     # Create list of [board targets,types] for Armbian-NG from the files in armbian-<armbianbranch>/build/config/boards
     def get_boardname_and_type(filename):
         # split
